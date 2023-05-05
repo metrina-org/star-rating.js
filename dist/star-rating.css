@@ -1,3 +1,11 @@
+/**
+ * Star Rating
+ * @version: 4.3.0
+ * @author: Paul Ryley (http://geminilabs.io)
+ * @url: https://github.com/pryley/star-rating.js
+ * @license: MIT
+ */
+
 :root {
     --gl-star-color: #fdd835;
     --gl-star-color-inactive: #dcdce6;

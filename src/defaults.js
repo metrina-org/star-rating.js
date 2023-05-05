@@ -9,4 +9,8 @@ export const defaults = {
     prebuilt: false,
     stars: null,
     tooltip: 'Select a Rating',
+    events: {
+        onIndexChange: null,
+        onSelect: null,
+    }
 };

@@ -77,8 +77,11 @@ export class Widget {
                 this.widgetEl.classList.remove('s' + (10 * (this.indexActive + 1)));
                 this.widgetEl.classList.add('s' + (10 * (index + 1)));
             }
+            const label = index < 0 ? this.props.tooltip : this.values[index]?.text;
+            if (typeof this.props.events.onIndexChange === 'function') {
+               this.props.events.onIndexChange(index,label);
+            }
             if (this.props.tooltip) {
-                const label = index < 0 ? this.props.tooltip : this.values[index]?.text;
                 this.widgetEl.setAttribute('aria-label', label);
             }
             this.indexActive = index;
@@ -182,10 +185,14 @@ export class Widget {
 
     selectValue (index, triggerChangeEvent) { // (int, bool):void
         this.el.value = this.values[index]?.value || ''; // first set the new value
+        const label = index < 0 ? this.props.tooltip : this.values[index]?.text;
         this.indexSelected = this.selected(); // get the actual index from the selected value
         if (false === triggerChangeEvent) {
             this.changeIndexTo(this.selected(), true);
         } else {
+            if (typeof this.props.events.onSelect === 'function') {
+                this.props.events.onSelect(index,label);
+            }
             this.el.dispatchEvent(new Event('change'));
         }
     }

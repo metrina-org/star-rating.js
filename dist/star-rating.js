@@ -1,10 +1,3 @@
-/**!
- * Star Rating
- * @version: 4.3.0
- * @author: Paul Ryley (http://geminilabs.io)
- * @url: https://github.com/pryley/star-rating.js
- * @license: MIT
- */
 var StarRating = (function () {
   'use strict';
 
@@ -40,7 +33,11 @@ var StarRating = (function () {
     maxStars: 10,
     prebuilt: false,
     stars: null,
-    tooltip: 'Select a Rating'
+    tooltip: 'Select a Rating',
+    events: {
+      onIndexChange: null,
+      onSelect: null
+    }
   };
 
   var addRemoveClass = function addRemoveClass(el, bool, className) {
@@ -209,6 +206,8 @@ var StarRating = (function () {
 
         // (int):void
         if (this.indexActive !== index || force) {
+          var _this$values$index;
+
           [].forEach.call(this.widgetEl.children, function (el, i) {
             // i starts at zero
             addRemoveClass(el, i <= index, _this2.props.classNames.active);
@@ -222,10 +221,13 @@ var StarRating = (function () {
             this.widgetEl.classList.add('s' + 10 * (index + 1));
           }
 
-          if (this.props.tooltip) {
-            var _this$values$index;
+          var label = index < 0 ? this.props.tooltip : (_this$values$index = this.values[index]) === null || _this$values$index === void 0 ? void 0 : _this$values$index.text;
 
-            var label = index < 0 ? this.props.tooltip : (_this$values$index = this.values[index]) === null || _this$values$index === void 0 ? void 0 : _this$values$index.text;
+          if (typeof this.props.events.onIndexChange === 'function') {
+            this.props.events.onIndexChange(index, label);
+          }
+
+          if (this.props.tooltip) {
             this.widgetEl.setAttribute('aria-label', label);
           }
 
@@ -382,16 +384,21 @@ var StarRating = (function () {
     }, {
       key: "selectValue",
       value: function selectValue(index, triggerChangeEvent) {
-        var _this$values$index2;
+        var _this$values$index2, _this$values$index3;
 
         // (int, bool):void
         this.el.value = ((_this$values$index2 = this.values[index]) === null || _this$values$index2 === void 0 ? void 0 : _this$values$index2.value) || ''; // first set the new value
 
+        var label = index < 0 ? this.props.tooltip : (_this$values$index3 = this.values[index]) === null || _this$values$index3 === void 0 ? void 0 : _this$values$index3.text;
         this.indexSelected = this.selected(); // get the actual index from the selected value
 
         if (false === triggerChangeEvent) {
           this.changeIndexTo(this.selected(), true);
         } else {
+          if (typeof this.props.events.onSelect === 'function') {
+            this.props.events.onSelect(index, label);
+          }
+
           this.el.dispatchEvent(new Event('change'));
         }
       }
